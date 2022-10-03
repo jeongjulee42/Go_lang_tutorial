@@ -1,6 +1,10 @@
 package main
 
 import (
+	"os"
+	"strings"
+
+	"github.com/jeongjulee42/Go_lang_tutorial/scrapper"
 	"github.com/labstack/echo"
 )
 
@@ -11,8 +15,10 @@ func handleHome(c echo.Context) error {
 }
 
 func handleScrape(c echo.Context) error {
-	// term := strings.ToLower(scrapper.CleanString(c.FormValue("term")))
-	return nil
+	defer os.Remove("jobs.csv")
+	term := strings.ToLower(scrapper.CleanString(c.FormValue("term")))
+	scrapper.Scrape(term)
+	return c.Attachment("jobs.csv", "jobs.csv")
 }
 func main(){
 	e := echo.New()
